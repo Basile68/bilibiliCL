@@ -340,10 +340,530 @@ int main()
   1. 整数，int，printf("%d",...)，scanf("%d",...)
   2. 带小数点的数，double，printf("%f",...)，scanf("%lf",...)
   
+# 表达式  
+
+一个表达式是一系列运算符和算子的组合，用来计算一个值。  
+  - 运算符（operator）是指进行运算的动作，比如加法运算符“+”，减法运算符“-”。
+  - 算子（operand）是指参与运算的值，这个值可能是常数，也可能是变量，还可能使一个方法的返回值。  
   
+## 计算时间差
+
+输入两个时间，每个时间分别输入小时和分钟的值，然后输出两个时间之间的差，也以几小时几分表示。  
+
+```c
+
+int hour1,minute1;
+int hour2,minute2;
+
+scanf("%d %d", &hour1, &minute1);
+scanf("%d %d", &hour2, &minute2);
+
+```
+
+自写实验版：  
+```c
+#include <stdio.h>
+
+int main()
+{
+	int hour1,minute1;
+	int hour2,minute2;
+
+	scanf("%d %d", &hour1, &minute1);
+	scanf("%d %d", &hour2, &minute2);
+
+	printf("时间差是%d时%d分", hour1-hour2, minute1-minute2);
+	
+	return 0;
+}
+```
+
+视频中教的版本：  
+```c
+#include <stdio.h>
+
+int main()
+{
+	int hour1,minute1;
+	int hour2,minute2;
+
+	scanf("%d %d", &hour1, &minute1);
+	scanf("%d %d", &hour2, &minute2);
+
+	int t1 = hour1 * 60 + minute1;
+	int t2 = hour2 * 60 + minute2;
+
+	int t = t2 - t1; 
+	
+	printf("时间差是%d小时%d分", t/60, t%60);
+	
+	return 0;
+}
+```
+
+进一步小小改动的版本：  
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	int hour1,minute1;
+	int hour2,minute2;
+
+	scanf("%d %d", &hour1, &minute1);
+	scanf("%d %d", &hour2, &minute2);
+
+	int t1 = hour1 * 60 + minute1;
+	int t2 = hour2 * 60 + minute2;
+
+	int t = abs(t2 - t1); 
+	
+	printf("时间差是%d小时%d分", t/60, t%60);
+	
+	return 0;
+}
+```
+
+# 运算符优先级
+
+## 求平均值
+
+```c
+int a,b;
+
+scanf("%d %d", &a, &b);
+
+double c = (a+b)/2.0
+
+printf("%d和%d的平均值=%f\n", a, b, c);
+```
+
+## 赋值运算符
+
+赋值也是运算，也有结果。  
+赋值是从右往左的，赋值的优先级比其他四则运算低。  
+
+a=b=6在计算机理解中是a=(b=6)  
+b=6把6赋给b，同时表达式的值也是6，然后再把这个值赋给a。  
+
+## 嵌入式赋值
+
+```c
+int a = 6;  
+int b;  
+int c = 1+(b=a);
+```
+这种嵌入式赋值不利于阅读而且容易产生错误。  
+
+## 结合关系
+
+一般自左向右；  
+单目+-和赋值=自右向左。  
+
+# 交换变量
+
+## 交换两个变量
+
+如果已经有：
+```c
+int a = 6;
+int b = 5;
+```
+那如何交换两个变量的值？  
+
+自写版：  
+```c
+#include <stdio.h>
+
+int main()
+{
+	int a = 5;
+	int b = 6;
+	
+	int c = a;
+	
+	printf("a=%d\n",b);
+	printf("b=%d",c);
+
+	return 0;
+}
+```
+
+视频教学版：  
+```c
+int main()
+{
+	int a=5;
+	int b=6;
+	int t;
+	t=a;
+	a=b;
+	b=t;
+	printf("a=%d,b=%d\n", a,b);
+	return 0;
+}
+```
+
+# 复合赋值和递增递减
 
 
-2.2.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
