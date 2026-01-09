@@ -310,9 +310,9 @@ int main()
 
 # 计算身高的程序
 
+```c
 #include <stdio.h>
 
-```c
 int main()
 {
 	printf("请分别输入身高的英尺和英寸，""如输入\"5 7\"表示5英尺7英寸：");
