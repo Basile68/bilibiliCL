@@ -1319,35 +1319,404 @@ if ( x < 0 ){
 	// printf("%d", ret);
 ```
 
+# `for()`循环
 
+## 阶乘
 
+n! = 1x2x3x4x5x...xn  
+写一个程序，让用户输入n，然后计算输出n!。  
 
+变量：
+1. 读用户的输入需要一个`int`的`n`；
+2. 计算的结果需要用一个变量保存，可以是`int`的`factor`；
+3. 在计算中需要有一个变量不断地从1递增到n，那可以是`int`的`i`。
 
+```c
+	int n, factor, i;
+	i = 0;
+	factor = 1;
+	
+	scanf("%d", &n);
+	
+	i++;
+	
+	while (i <= n) {
+		factor = factor * i;
+		i++;
+	}
+	
+	printf("%d", factor);
+	
+	return 0;
+```
 
+也可以使用`for()`改写，如下：  
+```c
+	for ( i=1; i<=n; i++ ) {
+		factor *= i ;
+	}
+```	
 
+## `for()`循环的格式
 
+`for()`中第一个是初始条件，第二个是循环继续的条件，也就是循环条件，第三个是循环完每一轮要做的事情。  
+`for()`循环像一个计数循环：设定一个计数器，初始化它，然后再计数器到达某值之前，重复执行循环体，  
+而每执行一轮循环，计数器值以一定步进进行调整，比如加1或者减1或者乘2等等。  
 
+```c
+for ( i=0; i<5; i++) {
+	printf("%d", i);
+} 
+```
+`for()`可以读成对于，上文代码可以读成：对于一开始的`i=0`，当`i<5`时，重复做循环体，每一轮循环在昨晚循环体内语句后，使得`i++`。  
 
+做求和的程序时，记录结果的变量应该初始化为0，而做求积的变量时，记录结果的变量应该初始化为1。  
 
+循环控制变量`i`只在循环里被使用了，循环外面它没有任何用处。因此，我们可以把变量`i`的定义写到`for()`语句里面去。  
+但这种写法只有在C99中才能用，在编译器中有时候需要加一些特殊选项才可以使用。
+```c
+for ( int i=1; i<=n; i++) {
+	fac *= i;
+} 
+```
 
+## try
 
+像上文代码中运行第一次会有一个1*1，这种是毫无意义的，那能不能把`int i = 1;`改成`int i = 2;`呢？  
+```c
+int fact = 1;
+for ( int i=2; i<=n; i++) {
+	fact *= i;
+}
+```
+答案是可以，这样如果输入1，那`for()`判断不符合循环条件会直接跳过，此时`fact = 1;`，所以输出的还是1的阶乘。  
 
+除了从2开始乘，直到乘n，还可以从n开始，直到乘2。  
+```c
+int fact = 1;
+for ( int i=n; i>=2; i--) {
+	fact *= i;
+}
+```
 
+在上文代码中`i`的值是从n到2的，那这样可以试着去除`i`变量，在`for()`中直接使用`n`，让`n`减到2为止。  
+这样可以省掉那个`i`，但是最后输出的时候哦还是需要一个变量来储存最开始的`n`的值。  
+```c
+int fact = 1;
+int i = n;
 
+for ( int n=n; n>=2; n--) {
+	fact *= n;
+}
 
+printf("%d!=%d\n", i, fact);
+```
+在上文代码中，`n=n`相当于什么事都没做，那其实是可以直接省略掉的。对于`for()`循环来说，三个表达式每个表达式都是可以省略的，但是分号不能省略。  
 
+## 循环次数
 
+对于代码`for (i=0; i<n; i++)`来说循环的次数是n，而循环结束以后，`i`的值是n。  
+循环的控制变量`i`，是选择从0开始还是从1开始，是判断`i<n`还是判断`i<=n`，对循环的次数，循环结束后变量的值都有影响。  
 
+```c
+for ( int i=1; i<=n; i++) {
+	fact *= i;
+}
 
+int i=1;
+while (i<=n){
+	fact *= i;
+	i++;
+}
+```
+上文的`for()`和`while()`其实是一样的，可以相互转换。  
 
+## 循环方法的选择
 
+在`for()`、`while()`、`do-while()`三种方法中做选择，一般来说：  
+- 如果有固定次数，选择`for()`；
+- 如果必须执行依次，选择`do-while()`；
+- 其他情况用`while()`。
 
+## 循环控制
 
+### 素数
 
+素数是只能被1和自己整除的数，不包括1。  
+2，3，5，7，11....  
 
+判断一个数是不是素数，就用1和它本身以外的数去除它试试。  
+```c
+	int x;
+	scanf("%d", &x);
+	int isPRrime = 1;
+	
+	int i;
+	for ( i=2; i<x; i++) {
+		if ( x % i == 0){
+			isPrime = 0;
+			break;
+		}
+	}
+	
+	if ( isPrime == 1) {
+		printf("是素数\n");	
+	} else {
+		printf("不是素数\n");
+	}
+```
+在`for()`循环中的`if()`中加一个`break`，`break`可以跳出循环进入循环之后的语句中，无论是哪种循环。  
+另外有一种`continue`，可以跳过循环这一轮剩下的语句进入下一轮循环。  
 
+```c
+	int x;
+	scanf("%d", &x);
+	// int isPRrime = 1;
+	
+	int i;
+	for ( i=2; i<x; i++) {
+		if ( x % i == 0){
+			isPrime = 0;
+			break;
+		}
+	}
+	
+	// if ( isPrime == 1) {
+	if ( i == x) {
+		printf("不是素数\n");	
+	} else {
+		printf("是素数\n");
+	}
+```
+可以改成这样，利用`i`和`x`之间的关系省去变量`isPrime`。
 
+## 嵌套循环
 
+### 输入100以内的素数
+
+```c
+	int x;
+	
+	for ( x = 2; x < 100; x++ )
+	{
+		int i;
+		int isPrime = 1;
+		
+		for ( i = 2; i < x; i++ ) {
+			if ( x % i == 0) {
+				isPrime = 0;
+				break;
+			}
+		}
+		if ( isPrime == 1) {
+			printf("%d ", x);
+		}
+	}
+```
+
+```c
+int x;
+x = 2;
+int cnt = 0;
+
+while ( cnt < 50) {
+	int i;
+	int isPrime = 1;
+	for ( i=2; i<x; i++) {
+		if ( x % i == 0) {
+			isPrime = 0;
+			break;
+		} 
+	
+	if ( isPrime == 1) {
+		printf("%d", x);
+		cnt++;
+	}
+	x++;
+	}
+}
+```
+如果是要改成输出50个素数的话，就可以这么写。  
+
+## 离开多重循环
+
+### 凑硬币
+
+如何用1角、2角和5角的硬币凑出10元以下的金额呢。  
+
+```c
+	int x;
+	int one, two, five;
+	
+	x = 2;
+	for ( one = 1; one < x*10; one++ ) {
+		for ( two = 1; two < x*10/2; two++ ) {
+			for ( five = 1; five < x*10/5; five++ ) {
+				if ( one + two*2 + five*5 == x*10 ) {
+					printf("可以用%d个1角加%d个2角加%d个5角得到%d元\n", one, two, five, x);
+				}
+			}
+		}
+	}
+```
+
+如果想要输出一个方案就停止，可以使用`break`以及`goto`。  
+
+`break`：
+```c
+	int x;
+	int one, two, five;
+	int exit = 0;
+	
+	x = 2;
+	for ( one = 1; one < x*10; one++ ) {
+		for ( two = 1; two < x*10/2; two++ ) {
+			for ( five = 1; five < x*10/5; five++ ) {
+				if ( one + two*2 + five*5 == x*10 ) {
+					printf("可以用%d个1角加%d个2角加%d个5角得到%d元\n", one, two, five, x);
+					exit = 1;
+					break;
+				}
+			}
+			if ( exit == 1 ) break;
+		}
+		if ( exit == 1 ) break;
+	}
+```
+
+`goto`：
+```c
+	int x;
+	int one, two, five;
+	
+	x = 2;
+	for ( one = 1; one < x*10; one++ ) {
+		for ( two = 1; two < x*10/2; two++ ) {
+			for ( five = 1; five < x*10/5; five++ ) {
+				if ( one + two*2 + five*5 == x*10 ) {
+					printf("可以用%d个1角加%d个2角加%d个5角得到%d元\n", one, two, five, x);
+					goto out;
+				}
+			}
+		}
+	}
+out:
+```
+
+## 前n项求和
+
+```c
+	int n;
+	scanf("%d", &n);
+	double sum = 0.0;
+	int i;
+	
+	for ( i = 1; i <= n; i++) {
+		sum = sum + 1.0/i;
+	}
+	
+	printf("%f", sum);
+```
+
+也可以这样写，让式子+和-来回切换。  
+```c
+	int n;
+	scanf("%d", &n);
+	double sum = 0.0;
+	int i;
+	int sign = 1;
+	
+	for ( i = 1; i <= n; i++) {
+		sum = sum + sign*1.0/i;
+		sign = -sign;
+	}
+	
+	printf("%f", sum);
+```
+
+## 正序分解整数
+
+输入一个非负整数，正序输出它的每一位数字。  
+例：输入：12345，输出：1 2 3 4 5。  
+
+```c
+	int x;
+	scanf("%d", &x);
+	
+	int mask = 1;
+	int t = x;
+	
+	while ( t > 9 ) {
+		t /= 10;
+		mask *= 10;
+	}
+	
+	printf("x=%d, mask=%d\n", x, mask);
+	
+	do {
+		int d = x / mask;
+		printf("%d", d);
+		if ( mask > 9) {
+			printf(" ");
+		}
+		x %= mask;
+		mask /= 10;
+	} while ( mask > 0);
+	
+	printf("\n");
+```
+
+## 最大公约数
+
+输入两个数a和b，输出它们的最大公约数。  
+输入： 12 18，输出： 6。  
+
+```c
+	int a,b;
+	int min;
+	
+	scanf("%d %d", &a, &b);
+	
+	if ( a<b) {
+		min = a;
+	} else {
+		min = b;
+	}
+	
+	int ret = 0;
+	int i;
+	
+	for ( i = 1; i < min; i++) {
+		if ( a%i == 0 ) {
+			if ( b%i == 0 ) {
+				ret = i;
+			}
+		}
+	}
+	
+	printf("%d和%d的最大公约数是%d\n", a, b, ret);
+```
+这个枚举方法很容易理解，但是效率不高，需要尝试所有的数。  
+
+### 辗转相除法
+
+辗转相除法的效率更高一些。  
+1. 如果b等于0，计算结束，a就是最大公约数；
+2. 否则，计算a除以b的余数，让a等于b，而b等于那个余数；
+3. 回到第一步。
+
+```c
+	int a, b, t;
+	scanf("%d %d", &a, &b);
+	
+	while ( b!=0) {
+		t = a%b;
+		a=b;
+		b=t;
+	}
+	
+	printf("gcd=%d\n", a);
+```
 
 
 
