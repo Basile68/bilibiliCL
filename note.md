@@ -1718,36 +1718,417 @@ out:
 	printf("gcd=%d\n", a);
 ```
 
+# 习题
+
+## 4-0
+
+给定不超过6的正整数，考虑从A开始的连续4个数字，请输出所有由它们组成的无重复数字的3位数。  
+
+```c
+	int A, B, C;
+	int i = 0;
+	int z;
+	
+	scanf("%d", &z);
+	
+	for (A = z; A <= z+3; A++){
+		for ( B = z; B <= z + 3; B++) {
+			for ( C = z; C <= z + 3; C++) {
+				if ( A != B){
+					if ( B != C) {
+						if ( A != C){
+							printf("%d", A*100+B*10+C);
+							i++;
+							if ( i == 6) {
+								printf("\n");
+								i = 0;
+							} else {
+								printf(" ");
+							}
+						}
+
+					}
+				}
+
+			}
+		}	
+	}
+```
+
+## 4-1
+
+水仙花数是指一个N位正整数（N>=3），它的每个位上的数字的N次幂之和等于它本身。例：153=1^3+5^3+3^3。本体要求编写程序，计算所有N位水仙花数。（3<=N<=7）
+按递增顺序输出所有N位水仙花数，每个数字占一行
+
+```c
+	int n;
+	scanf("%d", &n);
+	
+	int f = 1;
+	int i = 0;
+	for ( ; i < n; i++ ) {
+		f *= 10;
+	}
+
+	int t;
+	for ( t = f/10; t < f; t++ ){
+		i = n;
+		int m;
+		int sum = 0;
+		int tf = t;
+		
+		while ( i > 0) {
+			m = tf%10;
+			tf /= 10;
+			i--;
+			
+				int j = 1;
+				int s = 1;
+				while ( j <= n) {
+					s *= m;
+					j++;
+				}
+				
+			sum += s;
+			}
+			
+		if ( sum == t ) {
+		printf("%d\n", t);
+		}
+	}
+```
+
+## 打印九九口诀表
+
+本题要求对任意给定的1位正整数N，输出从1*1到N*N的部分口诀表。  
+
+```c
+	int n;
+	scanf("%d", &n);
+	
+	int i = 1;
+	int t = 1;
+	
+	for ( t = 1 ; t <= n; t++ ) {
+		
+		i = 1;
+		
+		while ( i < t) {
+			printf("%d*%d=%d ", i, t, t*i);
+			i++;
+		}
+		
+		printf("%d*%d=%d\n", i, t, t*i);
+	
+	}
+```	
+
+## 统计素数并求和
+
+统计给定整数M和N区间内素数的个数并对它们求和。  
+输入格式：输入在一行中给出两个正整数M和N（1 <= M <= N <= 500）。  
+输出格式：在一行中顺序输出M和N区间内素数的个数以及它们的和，数字间以空格分隔。  
+
+```c
+	int M, N, max, min, t, sta, sum;
+	
+	scanf("%d %d", &M, &N);
+	
+	if ( M > N) {
+		max = M;
+		min = N;
+	} else {
+		max = N;
+		min = M;
+	}
+	
+	sta = 0;
+	sum = 0;
+	
+	for ( t = min; t <= max; t++) {
+		
+		int i = 2;
+		int isPrime = 1;
+		
+		for ( ; i < t; i++) {
+			if ( t%i == 0) {
+				isPrime = 0;
+				break;
+				} 
+			}
+			
+		if ( isPrime == 1) {
+			sta++;
+			sum += t;
+		}
+			
+		}
+	
+	printf("%d %d", sta, sum);
+```
+
+## 4-4
 
 
 
+输入格式：输入第一行中给出2个不超过100的正整数，分别是系统产生的随机数以及猜测的最大次数N，随后每行给出一个用户的输入，直到出现负数为止。  
+输出格式：在一行中输出每次猜测相应的结果，直到输出猜对的结果或“Game Over”则结束。  
 
+程序需要提示大了（“Too big”），还是小了（”Too small“），相等则表示猜到了，如果猜到，则结束程序。  
+程序还要求统计猜的次数，如果1次猜出该数，提示“Bingo”；如果3次以内猜到该数，则提示“Lucky You!"；  
+如果超过3次但是再N（N>3）次以内（包括第N次）猜到该数，则提示“Good Guess！”；  
+如果超过N次都没有猜到 ，则提示“Game Over”，并结束程序。  
+如果在到达N次之前，用户输入了一个负数，也输出“Game Over”，并结束程序。  
 
+```c
+	int rand = 58;
+	int n = 4;
+	
+	int num = 0;
+	int i = 0;
+	
+	while ( i <= n ) {
+		printf ( "请输入：");
+		scanf ("%d", &num);
+		
+		if ( num < 0) {
+			printf ("Game Over");
+			break;
+		}
+		
+		i++;
+		
+		if ( num == rand) {
+			if ( i == 1) {
+				printf ("Bingo!");
+				break;
+			}
+			if ( i <= 3 ) {
+				printf ("Lucky You!");
+				break;
+			}
+			if ( i <= n ) {
+				printf("Good Guess!");
+				break;
+			}
+		}
+		
+	}
+	
+	if ( i > n ) {
+		printf ("Game Over");
+	}
+```
 
+## 5-0 求序列前N项和
 
+编写程序计算序列2/1+3/2+5/3+8/5+...的前N项之和。  
+注意该序列从第2项起，每一项的分子是前一项分子与分母的和，分母是前一项的分子。  
 
+输入格式：输入在一行中给出一个正整数N。  
+输出格式：在一行中输出部分和的值，精确到小数点后2位。题目保证计算结果不超过双精度范围。  
+输入样例： 20  输出样例：32.66
 
+```c
+	int l = 2;
+	int m = 1;
+	
+	double sum = 0.0;
+	int i = 0;
+	int j, k;
+	
+	int n;
+	scanf("%d", &n);
+	
+	while ( i < n ) {
+		sum += 1.0*l/m;
+		j = l;
+		k = m;
+		l = j + k;
+		m = j;
+		i++;
+	}
+	
+	
+	printf ("%.2f", sum);
+```
 
+## 5-1 约分最简分式
 
+编写一个程序，要求用户输入一个分数，然后将其约分为最简分式。当分子大于分母时，不需要表达为整数又分数的形式，当分子分母相等时，仍然表达为1/1的分数形式。  
 
+输入格式：输入在一行中给出一个分数，分子和分母中间以斜杠“/”分隔，如：12/34表示34分之12。分子和分母都是正整数（不包含0）。
+在`scanf()`的格式字符串中加入“/”，让`scanf()`来处理这个斜杠。  
 
+输出格式：在一行中输出这个分数对应的最简分式，格式与输入的相同，即采用“分子/分母”的形式表示分数。
 
+```c
+	int l, m;
+	int min;
+	int i = 2;
+	
+	scanf ("%d/%d", &l, &m);
+	
+	if ( l <= m ) {
+		min = l;
+	} else {
+		min = m;
+	}
+	
+	while ( i <= min ) {
+		if ( l % i == 0 ) {
+			if ( m % i == 0) {
+				l = l/i;
+				m = m/i;
+				i = 1;
+			}
+		}
+		i++;
+	}
+	
+	printf("%d/%d", l, m);
+```
 
+## 5-2 念数字
 
+输入一个整数，输出每个数字对应的拼音。当整数为负数时，先输出“fu”字。是个数字对应的拼音如下：
+|0|ling|
+|---|---|
+|1|yi|
+|2|er|
+|3|san|
+|4|si|
+|5|wu|
+|6|liu|
+|7|qi|
+|8|ba|
+|9|jiu|
 
+输入格式：输入在一行中给出一个整数，如：1234；提示：整数包括整数、零和负数。
+输出格式：在一行中输出这个整数对应的拼音，每个数字的拼音之间用空格分开，行末没有最后的空格。如yi er san si。
+输入样例： -600    输出样例：fu liu ling ling
 
+### 变量和思路
 
+1. 储存输入整数的变量`x`；
+2. 用来数位数的中间变量`t`和代表有多少位的`mask`；
+3. 代表每位上的数`type`；
 
+1. 输入整数；
+2. 把数变正；
+3. 然后倒过来；
+4. 提取每个位上的数；
+5. 通过每个位上的数定位到对应`switch-case`里的case；
 
+```c
+	int x;
+	scanf("%d", &x);
+	
+	if ( x < 0 ) {
+		printf ("fu ");
+		x = -1 * x;
+	}
+	
+	int t = x;
+	int mask = 1;
+	
+	while ( t > 9 ) {
+		t /= 10;
+		mask *= 10;
+	}
+	
+	do {
+		
+		int type = x / mask;
+		x %= 10;
+		mask /= 10;
+		
+		switch (type) {
+			case 0:
+				printf("ling");
+				break;
+			case 1:
+				printf("yi");
+				break;
+			case 2:
+				printf("er");
+				break;				
+			case 3:
+				printf("san");
+				break;				
+			case 4:
+				printf("si");
+				break;				
+			case 5:
+				printf("wu");
+				break;				
+			case 6:
+				printf("liu");
+				break;				
+			case 7:
+				printf("qi");
+				break;				
+			case 8:
+				printf("ba");
+				break;				
+			case 9:
+				printf("jiu");
+				break;											
+		}
+		
+			if ( mask > 0) {
+				printf (" ");
+			}		
+		 
+	} while ( mask > 0);
+```
 
+## 5-3 求a的连续和
 
+输入两个整数a和n，a的范围是[0,9]，n的范围是[1,8]，求数列之和S = a+aa+aaa+aaa+...+aaa....aa（n个a）。  
+如a为2、n为8时输出的是2+22+222...+22222222的和。  
 
+输入格式：输入在一行中给出两个整数，先后表示a和n。  
+输出格式：在一行中输出要求的数列之和。  
+输入样例： 2 4   输出样例：2468
 
+### 变量和思路
 
+1. 变量`a`和`n`；
+2. 总和`sum`；
+3. 数列中的某个数`t`；
+4. 第`i`个数；
+5. 位数`s`。
 
+1. 输入两个变量；
+2. 计算第一个值；
+   加到`sum`；
+3. 计算第二个值再加上第一个值；
+	计算第二个值是用a*10+a；
+	再计算第三个值a*100+1*10+a；
+   加到`sum`；
+4. 再计算第n个值；
+   加到`sum`；
+5. 结束。
 
-
-
+```c
+	int a, n;
+	scanf("%d %d", &a, &n);
+	
+	int sum = 0;
+	int t = 0;
+	int i = 1;
+	int s = 1;
+	
+	while ( i <= n ) {
+		t = a * s + t;
+		sum += t;
+		i++;
+		s *= 10;
+	}
+	
+	printf ("%d", sum);
+```
 
 
 
