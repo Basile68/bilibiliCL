@@ -3318,401 +3318,413 @@ printf("%s",string);
 
 字符串数组可以应用在程序参数中。  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 单字符输入输出
+
+`putchar`  
+`int putchar (int c);`  
+- 这里的参数虽然是`int c`，但它其实是接收`char`的，而不是说可以像`int`那样接收4个字节。
+- 函数是向标准输出写一个字符；
+- 返回写了几个字符，`EOF (-1)`表示写失败。
+  - 正常情况下不需要检查`putchar`函数的输出。
+  
+`getchar`  
+`int getchar(void);`  
+- 它返回给你一个从标准输入读到的一个字符；
+- 返回的是字符，但返回类型是`int`而不是`char`的原因在于为了返回`EOF(-1)`;
+- 返回`EOF(-1)`表示输入结束了。
+- 如果想要让程序知道输入结束了，但是程序还在继续运行的话，这时程序会返回`EOF`：
+  - Windows 输入 `Ctrl-Z`;
+  - Unix 输入 `Ctrl-D`。
+
+```c
+#include <stdio.h>
+
+int main() {
+	int ch;
+	
+	while (  (ch = getchar()) != EOF ) {
+		putchar(ch);
+	}
+	
+	printf("EOF\n");
+	
+	return 0;
+}
+```
+
+## 函数`STRLEN`
+
+对于字符串，C语言提供了很多函数帮助处理字符串。  
+C语言标准库中的函数有：`strlen`,`strcmp`,`strcpy`,`strcat`,`strchr`,`strstr`。  
+- 这些函数的原型在`string.h`中。
+
+`strlen`函数可以告诉你字符串的长度是多少。  
+`size_t strlen(const char *s);` 这个意思是使用`strlen`测定字符串的长度并且保证函数不会修改字符串的内容。  
+
+## 函数`STRCMP`
+
+`int strcmp(const chat *s1, const char *s2);`  
+比较两个字符串，并且同时不对两个字符串做更改，返回：  
+- `0:s1==s2`
+- `1:s1>s2`
+- `-1:s1<s2`
+
+```c
+	char s1[] = "abc";
+	char s2[] = "abc";
+	printf("%d\n", strcmp(s1,s2));
+	
+	return 0;
+```
+
+但是如果用`s1 == s2`来做比较的话永远是`false`，因为两个数组变量这样做比较的意思是这两个数组变量的地址是否相同。  
+- 但两个数组变量的地址一定是不同的。
+
+```c
+	char s1[] = "abc";
+	char s2[] = "Abc";
+	printf("%d\n", strcmp(s1,s2));
+	printf("%d\n", 'a'-'A');
+	
+	return 0;
+```
+这种情况下会输出两个`32`，这也代表了`strcmp`输出的是两个数之间的差值。  
+
+如果是这样的话：  
+```c
+	char s1[] = "abc";
+	char s2[] = "abc ";
+	printf("%d\n", strcmp(s1,s2));
+	
+	return 0;
+```
+
+结果会是`-32`。  
+在内存中`s1`会是`a`,`b`,`c`,`\0`，`s2`会是`a`,`b`,`c`,`空格`,`\0`。  
+那两者比较大小实质上是做减法，空格的值是32，用0减32自然就是-32了。  
+
+自己写一个`strcmp`，视频示例代码如下：  
+```c
+int mycmp(const char* s1, const char* s2)
+{
+	int idx = 0;
+	while ( 1 ) {
+		if ( s1[idx] != s2[idx] ) {
+			break;
+		} else if ( s1[idx] == "\0" ) {
+			break;
+		}
+		
+		idx ++;
+	}
+	return s1[idx] - s2[idx];
+}
+```
+
+这种情况下，可以进一步调整代码，改写`while(1)`部分，将某个条件放入`while()`循环。  
+视频示例代码如下：  
+```c
+int mycmp(const char* s1, const char* s2)
+{
+	int idx = 0;
+	while ( s1[idx] == s2[idx] && s1[idx] != '\0' ) {
+		idx ++;
+	}
+	return s1[idx] - s2[idx];
+}
+```
+
+这样改也可以：  
+```c
+int mycmp(const char* s1, const char* s2)
+{
+	while ( *s1 == *s2 && *s1 != '\0' ) {
+		s1++;
+		s2++;
+	}
+	return *s1 - *s2;
+}
+```
+
+以上是在处理字符串的代码里面，常见的两种手段：  
+1. 要么把它当作数组，用一个整数来作为数组的下标遍历那个字符串；
+2. 要么就直接用指针，参数拿到的东西反正也是指针，然后让指针自己去加加加，让指针所指的那个东西去做判断。  
+
+## 函数`STRCPY`
+
+`char * strcpy(char *restrict dst, const char *restrict src);`  
+- 把`src`的字符串拷贝到`dst`表达的空间中去；
+  - `restrict`表明`src`和`dst`不重叠（C99）；
+  - 如果两者内存空间有重叠则不能用`strcpy`。
+- 结果会返回`dst`。
+  - 传统上默认返回的原因是因为想要让`strcpy`的结果继续参与运算。
+
+常用场景是在函数的参数中获取一个字符串变量，但是不能保证一直它会一直存在在这个块中，就用一个中间量把它复制下来。（个人根据视频里的话理解的）。  
+例：  
+`char *dst = (char*)malloc(strlen(src)+1);`  
+`strcpy(dst,src);`  
+这是一个套路，平时复制字符串就是这么做的。  
+细节是申请分配内存空间时要多要申请一格。  
+
+`strcpy`自己写代码的样子（简单版）：  
+
+数组版：    
+
+```c
+char* mycpy(char* dst, const char* src) {
+	int idx = 0;
+	while ( src[idx] != '\0' ) {
+		dst[idx] = src[idx];
+	}
+	dst[idx] = '\0';
+	
+	return dst;
+}
+```
+
+数组版中`while`循环中可以像上文代码中那样写，也可以直接写成`while ( src[idx] )`，因为我们想要的判断条件就是`src[idx]`会不会是0，  
+到结尾也就是我们想要跳出循环的时候就正好是 0 了。
+
+指针版：  
+
+```c
+char* mycpy(char* dst, const char* src) {
+	
+	char *ret = dst;
+	
+	while ( *src != '\0' ) {
+		*dst = *src;
+		dst++;
+		src++;
+	}
+	
+	*dst = '\0';
+	
+	return ret;
+}
+```
+指针版本代码最后不能用返回`dst`，因为`dst`已经加了很多次，不是原来的地址了，  
+所以就在一开始用一个指针指向`dst`一开始的地址，最后返回一开始设置的指针就好。  
+也可以再进一步更改：  
+
+```c
+char* mycpy(char* dst, const char* src) {
+	
+	char *ret = dst;
+	
+	while ( *src ) {
+		*dst++ = *src++;
+	}
+	
+	*dst = '\0';
+	
+	return ret;
+}
+
+## 还有一些字符串函数
+
+`char * strchr(const char *s, int c);`  
+这个的意思是在字符串`s`中从左往右找`c`第一次出现的位置。  
+`char * strrchr(const char *s, int c);`  
+这个的意思和上面的一样，不过这个是从右往左找。  
+这两个如果没找到则返回`NULL`，找到了就返回相应的指针。  
+
+```c
+int main () {
+	char s[] = "hello";
+	char *p = strchr(s, 'l');
+	printf("%s\n", p);
+	
+	return 0;
+}
+```
+像这个代码返回的结果会是`llo`。  
+
+那如果想要找第 2 个`l`的话可以这样写：  
+```c
+int main () {
+	char s[] = "hello";
+	char *p = strchr(s, 'l');
+	p = strchr(p+1, 'l');
+	printf("%s\n", p);
+	
+	return 0;
+}
+```
+结果会是`lo`。  
+
+那如果是想要的是`l`后的那一段字符放入另一个字符串里该怎么办？  
+```c
+int main () {
+	char s[] = "hello";
+	char *p = strchr(s, 'l');
+	char *t = (char *)malloc(strlen(p)+1);
+	strcpy (t, p);
+	printf("%s\n", t);
+	
+	return 0;
+}
+```
+结果会是`llo`。  
+
+那如果想要转移到另一个字符串里的是`l`之前的部分呢。  
+```c
+int main () {
+	char s[] = "hello";
+	char *p = strchr(s, 'l');
+	char c = *p;
+	*p = '\0';
+	char *t = (char *)malloc(strlen(s)+1);
+	strcpy (t, s);
+	*p = c;
+	printf("%s\n", t);
+	
+	return 0;
+}
+```
+返回结果会是`he`。  
+
+`char *strstr(const char *s1, const char *s2);`  
+这个是用来在字符串当中寻找一个字符串的。  
+
+`char * strcasestr(const char *s1, const char *s2);`  
+在寻找的过程中，忽略大小写进行寻找。  
+
+## 枚举
+
+如果程序中会出现一些数字，我们应该尽量地用一些符号来表达这些数字，而不是直接将这些数字呈现在程序当中。  
+这样做最大的好处是可读性，别人看程序时看到的是字母和单词，能更好的理解这些数字代表的什么意义。  
+
+这里有一个更加方便的方式去定义一些可以罗列起来的数据，这个方式叫做枚举。  
+
+```c
+#include <stdio.h>
+
+enum COLOR {RED, YELLOW, GREEN};
+
+int main(int argc, char const *argv[])
+{
+	int color = -1;
+	char *colorName = NULL;
+	
+	printf("输入你喜欢的颜色的代码：");
+	scanf("%d", &color);
+	switch ( color ) {
+	case RED: colorName = "red"; break;
+	case YELLOW: colorName = "yellow"; break;
+	case GREEN: colorName = "green"; break;
+	default: colorName = "unknown"; break;
+	}
+	
+	printf("你最喜欢的颜色是%s\n", colorName);
+	
+	return 0;
+}
+```
+
+枚举是一种用户定义的数据类型，它用关键字`enum`以如下语法来声明：  
+`enum 枚举类型名字 {名字0,...,名字n};`  
+但是这里的“枚举类型名字”通常来说并不真的使用，有的时候目的仅仅是为了要大括号里面的名字，因为它们就是常量符号，它们的类型是`int`，值则依次从 0 到 n 。  
+如：`enum colors {red, yellow, green };`  
+   - 这样就创建了三个常量，`red`的值是 0 ，`yellow`的值是 1 ，而`green`是 2 。  
+当需要一些可以排列起来的常量值时，定义枚举的意义就是给了这些常量值名字。  
+
+```c
+#include <stdio.h>
+
+enum color { red, yellow, green };
+
+void f(enum color c);
+
+int main (void)
+{
+	enum color t = red;
+	
+	scanf("%d", &t);
+	f(t);
+	
+	return 0;
+}
+
+void f(enum color c)
+{
+	printf("%d\n", c);
+}
+```
+
+- 枚举量可以作为值；
+- 枚举类型可以跟上`enum`作为类型，实际上在 C 语言中是不能扔掉`enum`的；
+- 但是实际上是以整数来做内部计算和外部输入输出的。
+
+### 套路：自动计数的枚举
+
+`enum COLOR { RED, YELLOW, GREEN, NumCOLORS};`
+这里`NumCOLORS`的值是 3 。  
+这样需要遍历所有的枚举量或者需要建立一个用枚举量做下标的数组的时候就很方便了。  
+
+### 枚举量
+
+声明枚举量的时候可以指定值。  
+`enum COLOR { RED = 1, YELLOW, GREEN = 5};`  
+这里的`YELLOW`的值就是2。  
+
+即使给枚举类型的变量赋不存在的整数值也没有任何 warning 或 error 。  
+
+虽然枚举类型可以当作类型来使用，但实际上不好用且很少用。  
+如果有意义上排比的名字，用枚举比用`const int`方便。  
+枚举比宏（`macro`）好，因为枚举有`int`类型。  
+
+## ACLLIB 
+
+- 是一个基础 Win32API 的函数库，提供了相对较为简单的方式来做 Windows 程序；
+  - 可以直接选用 Win32API ，也可以选用一些其他的跨平台的图形函数库。
+- 实际提供了一个 .c 和两个 .h，可以在 MSVC 和 Dev C++（MinGW）中使用；
+- 以 GPL 方式开源放在 github 上；
+- 纯教学用途，但是编程模型和思想可以借鉴。
+
+## Windows API
+
+从第一个 32 位的 Windows 开始就出现了，就叫做 Win32API 。  
+它是一个纯 C 的函数库，就和 C 标准库一样，使你可以写 Windows 应用程序。  
+过去很多 Windows 程序都是用这个方式做出来的。  
+接口时一直没变的，只要会 C 语言，有恰当的编译器就可以写出 Windows 程序，不过随着 Windows 的规模越来越大，写 Windows 程序的难度越来越高。  
+
+### `main()`
+
+`main()`成为 C 语言的入口函数其实和 C 语言本身无关，代码其实是被一小段叫做启动代码的程序所调用的，它需要一个叫做`main`的地方。  
+操作系统把你的可执行程序装载到内存里，启动运行，然后调用你的`main`函数。  
+如果编译器采用另外的方式来编译程序，也许就用不到`main`函数了。  
+
+### `WinMain()`
+
+Windows 应用程序是要用`WinMain()`做入口的。  
+
+### 进一步的问题
+
+- 如何产生一个窗口？窗口结构。
+- 如何在窗口中画东西？DC
+- 如何获得用户的鼠标和键盘动作？ 消息循环和消息处理代码
+- 如何画出标准的界面：菜单、按钮、输入框
+  - acllib 目前不能做
+
+## DevC++ 创建 ACLLib 项目
+
+1. 点击新建项目；
+2. 点击 Windows Application；
+3. 点击 C 项目；
+4. 将 acllib.c 和 acllib.h 文件拷贝到目录里面去；
+5. 点击项目添加将 acllib.c 和 acllib.h 添加进工程里来（这样项目管理那里就能看到这些文件了）；
+6. 点击项目属性，打开参数页，linker 下方点击加入库或者对象，找到安装 devc++ 的地方；
+7. 在 lib 文件夹里寻找一个叫做 liver wmm.a 的文件，添加进来；
+8. 再寻找课件中提及的文件，加入进来；
+9. 将 main.c 中的代码删除，换上自己的代码：
+
+```c
+#include "acllib.h"
+
+int Setup() //这是 acllib 的入口函数
+{
+	initWindow("test", 100, 100, 200, 200); //输出一个窗口，窗口名字是 test，意思是在 100,100 的地方输出一个 200,200 的窗口
+	return 0;
+}
+```
